@@ -1,0 +1,73 @@
+version: '3.8'
+
+# Services
+services:
+
+  # Nginx Service
+  nginx:
+    build: ./.docker/nginx
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      default:
+        aliases:
+          - frontend.wundermobility.task
+    volumes:
+      - ./src/backend:/var/www/backend:ro,delegated
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - phpmyadmindata:/var/www/phpmyadmin:ro,delegated
+      - ./.docker/nginx/certs:/etc/nginx/certs:delegated
+    depends_on:
+      - backend
+      - frontend
+      - phpmyadmin
+
+  # Backend Service
+  backend:
+    build:
+      context: ./src/backend
+      target: backend
+    working_dir: /var/www/backend
+    volumes:
+      - ./src/backend:/var/www/backend:delegated
+      - ./.docker/backend/init:/opt/files/init:delegated,ro
+      - ./.docker/nginx/certs:/usr/local/share/ca-certificates:delegated,ro
+    depends_on:
+      - mysql
+
+  # Frontend Service
+  frontend:
+    build: ./src/frontend
+    working_dir: /var/www/frontend
+    volumes:
+      - ./src/frontend:/var/www/frontend:delegated
+    depends_on:
+      - backend
+
+  # MySQL Service
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demo
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - mysqldata:/var/lib/mysql:delegated
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5-fpm-alpine
+    environment:
+      PMA_HOST: mysql
+    volumes:
+      - phpmyadmindata:/var/www/html:delegated
+    depends_on:
+      - mysql
+
+# Volumes
+volumes:
+
+  mysqldata:
+
+  phpmyadmindata:
