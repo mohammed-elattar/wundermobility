@@ -1,0 +1,29 @@
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "telephone": [
+            "The telephone field is required."
+        ],
+        "password": [
+            "The password field is required."
+        ],
+        "address.street": [
+            "The address.street field is required."
+        ],
+        "address.house_number": [
+            "The address.house number field is required."
+        ],
+        "address.zip_code": [
+            "The address.zip code field is required."
+        ],
+        "address.city": [
+            "The address.city field is required."
+        ],
+        "payment_infos.account_owner": [
+            "The payment infos.account owner field is required."
+        ],
+        "payment_infos.iban": [
+            "The payment infos.iban field is required."
+        ]
+    }
+}

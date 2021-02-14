@@ -1,0 +1,8 @@
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "payment_infos.iban": [
+            "The payment infos.iban field is required."
+        ]
+    }
+}

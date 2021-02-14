@@ -1,0 +1,11 @@
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "payment_infos.account_owner": [
+            "The payment infos.account owner field is required."
+        ],
+        "payment_infos.iban": [
+            "The payment infos.iban field is required."
+        ]
+    }
+}

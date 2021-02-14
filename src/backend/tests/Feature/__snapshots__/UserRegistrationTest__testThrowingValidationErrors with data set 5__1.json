@@ -1,0 +1,17 @@
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "address.zip_code": [
+            "The address.zip code field is required."
+        ],
+        "address.city": [
+            "The address.city field is required."
+        ],
+        "payment_infos.account_owner": [
+            "The payment infos.account owner field is required."
+        ],
+        "payment_infos.iban": [
+            "The payment infos.iban field is required."
+        ]
+    }
+}
