@@ -1,27 +1,26 @@
 <template>
-  <div id="app">
-    <HelloThere :msg="msg"/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <v-toolbar-title>Wunder Mobility</v-toolbar-title>
+    </v-app-bar>
+
+    <v-main>
+      <RegistrationForm></RegistrationForm>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import axios      from 'axios'
-import HelloThere from './components/HelloThere.vue'
+import RegistrationForm from "@/components/Registration/RegistrationForm";
 
 export default {
   name: 'App',
   components: {
-    HelloThere
+    RegistrationForm,
   },
-  data () {
-    return {
-      msg: null
-    }
-  },
-  mounted () {
-    axios
-      .get('https://backend.wundermobility.task/api/hello-there')
-      .then(response => (this.msg = response.data))
-  }
-}
+};
 </script>

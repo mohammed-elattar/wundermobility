@@ -109,6 +109,11 @@ yarn () {
     docker-compose run --rm frontend yarn "${@:1}"
 }
 
+# Run a Yarn command
+vue () {
+    docker-compose run --rm frontend vue "${@:1}"
+}
+
 
 #######################################
 # MENU
@@ -175,6 +180,9 @@ EOF
     yarn)
         yarn "${@:2}"
         ;;
+    vue)
+        vue "${@:2}"
+        ;;
     *)
         cat << EOF
 
@@ -201,6 +209,7 @@ Available commands:
     stop ...................................... Stop the containers
     update .................................... Update the Docker environment
     yarn ...................................... Run a Yarn command
+    vue ....................................... Run a vue cli command
 
 EOF
         exit
