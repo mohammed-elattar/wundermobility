@@ -41,7 +41,7 @@
         class="mr-4"
         @click="submit"
     >
-      submit
+      next
     </v-btn>
     <v-btn @click="clear">
       clear
@@ -67,6 +67,7 @@ export default {
     lastName: '',
     telephone: '',
     password: '',
+    currentStep: 1,
   }),
   computed: {
     firstNameErrors() {
@@ -106,8 +107,9 @@ export default {
           "last_name": this.lastName,
           "telephone": this.telephone,
           "password": this.password,
-          "current_step": 1
+          "current_step": this.currentStep
         }
+        this.$emit('stepFormUpdated', formData);
         this.$emit('stepFormUpdated', formData);
       }
     },
@@ -119,5 +121,49 @@ export default {
       this.password = ''
     },
   },
+  mounted() {
+    if (localStorage.getItem('currentStep')) {
+      const allFormData = {...JSON.parse(localStorage.getItem('formData'))};
+      const {first_name, last_name, telephone, password} = allFormData;
+      this.firstName = first_name
+      this.lastName = last_name
+      this.telephone = telephone
+      this.password = password
+    }
+  },
 }
 </script>
+
+
+<!--firstName: {-->
+<!--get() {-->
+<!--return this.$store.state.first_name;-->
+<!--},-->
+<!--set(value) {-->
+<!--return this.$store.commit('setFirstName', {'firstName': value});-->
+<!--},-->
+<!--},-->
+<!--lastName: {-->
+<!--get() {-->
+<!--return this.$store.state.last_name;-->
+<!--},-->
+<!--set(value) {-->
+<!--return this.$store.commit('setLastName', {'lastName': value});-->
+<!--},-->
+<!--},-->
+<!--telephone: {-->
+<!--get() {-->
+<!--return this.$store.state.telephone;-->
+<!--},-->
+<!--set(value) {-->
+<!--return this.$store.commit('setTelephone', {'telephone': value});-->
+<!--},-->
+<!--},-->
+<!--password: {-->
+<!--get() {-->
+<!--return this.$store.state.password;-->
+<!--},-->
+<!--set(value) {-->
+<!--return this.$store.commit('setPassword', {'password': value});-->
+<!--},-->
+<!--}-->

@@ -21,6 +21,12 @@
 
     <v-btn
         class="mr-4"
+        @click="prevStep"
+    >
+      prev
+    </v-btn>
+    <v-btn
+        class="mr-4"
         @click="submit"
     >
       submit
@@ -45,6 +51,7 @@ export default {
   data: () => ({
     accountOwner: '',
     iban: '',
+    currentStep: 3
   }),
   computed: {
     accountOwnerErrors() {
@@ -72,16 +79,27 @@ export default {
                 "account_owner": this.accountOwner,
                 "iban": this.iban,
               },
-          "current_step": 3
+          "current_step": this.currentStep
         }
         this.$emit('stepFormUpdated', formData);
       }
+    },
+    prevStep() {
+      this.$emit('prevStepClicked', this.currentStep);
     },
     clear() {
       this.$v.$reset()
       this.accountOwner = ''
       this.iban = ''
     },
+  },
+  mounted() {
+    if (localStorage.getItem('currentStep')) {
+      const allFormData = {...JSON.parse(localStorage.getItem('formData'))};
+      const {account_owner, iban} = allFormData.payment_infos;
+      this.accountOwner = account_owner
+      this.iban = iban
+    }
   },
 }
 </script>

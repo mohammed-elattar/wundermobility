@@ -1,38 +1,25 @@
 <template>
   <v-container>
-  <v-stepper v-model="e1">
-    <v-stepper-header>
-      <v-stepper-step
-          :complete="e1 > 1"
-          step="1"
-      >
-        Personal Information
-      </v-stepper-step>
+    <v-stepper v-model="currentStep">
+      <v-stepper-header>
+        <div v-for="step in steps" :key="step.id">
+          <v-stepper-step
+              :complete="currentStep > step.id"
+              :step="step.id"
+          >
+            {{ step.title }}
+          </v-stepper-step>
+        </div>
+      </v-stepper-header>
 
-      <v-divider></v-divider>
-
-      <v-stepper-step
-          :complete="e1 > 2"
-          step="2"
-      >
-        Address Info
-      </v-stepper-step>
-
-      <v-divider></v-divider>
-
-      <v-stepper-step step="3">
-        Payment Info
-      </v-stepper-step>
-    </v-stepper-header>
-
-    <v-stepper-items>
-      <form>
-        <first-step @stepFormUpdated="handleFormData"/>
-        <second-step @stepFormUpdated="handleFormData"/>
-        <third-step @stepFormUpdated="handleFormData"/>
-      </form>
-    </v-stepper-items>
-  </v-stepper>
+      <v-stepper-items>
+        <form>
+          <first-step @prevStepClicked="handlePrevStep" @stepFormUpdated="handleFormData"/>
+          <second-step @prevStepClicked="handlePrevStep" @stepFormUpdated="handleFormData"/>
+          <third-step @prevStepClicked="handlePrevStep" @stepFormUpdated="handleFormData"/>
+        </form>
+      </v-stepper-items>
+    </v-stepper>
   </v-container>
 </template>
 
@@ -46,7 +33,21 @@ export default {
   components: {ThirdStep, SecondStep, FirstStep},
   data() {
     return {
-      e1: 1,
+      currentStep: 1,
+      steps: [
+        {
+          "id": 1,
+          "title": "Personal Information"
+        },
+        {
+          "id": 2,
+          "title": "Address Information"
+        },
+        {
+          "id": 3,
+          "title": "Payment Information"
+        }
+      ],
       formData: {
         "first_name": "",
         "last_name": "",
@@ -67,17 +68,48 @@ export default {
   },
   methods: {
     handleFormData(event) {
-      this.formData = { ...this.formData, ...event}
-      //TODO to be changed to be length of the array
-      if(event.current_step !== 3) {
-        this.e1 = event.current_step +1;
+      this.formData = {...this.formData, ...event}
+      if (event.current_step !== this.stepsCount) {
+        this.currentStep = event.current_step + 1;
       }
 
-      if(event.current_step === 3) {
+      if (event.current_step === this.stepsCount) {
         const registerReqBody = {...this.formData};
-        delete  registerReqBody.current_step;
         registerUser(registerReqBody);
+        console.log('asdfghj');
+        localStorage.removeItem('formData');
+        localStorage.removeItem('currentStep');
       }
+    },
+    handlePrevStep(currentStep) {
+      console.log(currentStep);
+      if (currentStep === 1) {
+        return false
+      }
+
+      this.currentStep = currentStep - 1;
+    }
+  },
+  computed: {
+    stepsCount() {
+      return this.steps.length;
+    }
+  },
+  mounted() {
+    if (localStorage.getItem('currentStep')) {
+      this.currentStep = localStorage.currentStep;
+      this.formData = {...JSON.parse(localStorage.getItem('formData'))}
+    }
+  },
+  watch: {
+    formData(newFormData) {
+      if(localStorage.getItem('currentStep')) {
+        localStorage.setItem('formData',JSON.stringify(newFormData));
+        console.log('Attar');
+      }
+    },
+    currentStep(newCurrentStep) {
+      localStorage.setItem('currentStep', newCurrentStep);
     }
   }
 }

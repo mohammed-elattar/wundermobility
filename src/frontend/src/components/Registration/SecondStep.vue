@@ -39,9 +39,15 @@
 
     <v-btn
         class="mr-4"
+        @click="prevStep"
+    >
+      prev
+    </v-btn>
+    <v-btn
+        class="mr-4"
         @click="submit"
     >
-      submit
+      next
     </v-btn>
     <v-btn @click="clear">
       clear
@@ -67,6 +73,7 @@ export default {
     houseNumber: '',
     zipCode: '',
     city: '',
+    currentStep: 2
   }),
   computed: {
     streetErrors() {
@@ -109,10 +116,13 @@ export default {
                 "zip_code": this.zipCode,
                 "city": this.city,
               },
-          "current_step": 2
+          "current_step": this.currentStep
         }
         this.$emit('stepFormUpdated', formData);
       }
+    },
+    prevStep() {
+      this.$emit('prevStepClicked', this.currentStep);
     },
     clear() {
       this.$v.$reset()
@@ -121,6 +131,16 @@ export default {
       this.zipCode = ''
       this.city = ''
     },
+  },
+  mounted() {
+    if (localStorage.getItem('currentStep')) {
+      const allFormData = {...JSON.parse(localStorage.getItem('formData'))};
+      const {street, house_number, zip_code, city} = allFormData.address;
+      this.street = street
+      this.houseNumber = house_number
+      this.zipCode = zip_code
+      this.city = city
+    }
   },
 }
 </script>
